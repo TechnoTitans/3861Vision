@@ -1,6 +1,27 @@
 import cv2
 import numpy as np
 
+from networktables import NetworkTables
+
+vision_table_name = "vision"
+
+
+def nt_setup():
+    NetworkTables.initialize()
+
+
+vision_table = NetworkTables.getTable(vision_table_name)
+
+
+def send_angle(value):
+    vision_table.putNumber("angle", value)
+
+
+def send_distance(value):
+    vision_table.putNumber("distance", value)
+
+# -------------------------------- End of network tables ----------------------------------
+
 hue, lum, sat = 0, 0, 0
 xd, yd = 0, 0
 hls = None
@@ -112,6 +133,11 @@ while True:
         cv2.rectangle(cont, (int(x_start), int(y_start)), (int(x_width), int(y_width)), (0, 0, 255), 2)
 
         cv2.circle(cont, (int(x_center), int(y_center)), 2, (0, 255, 0), 2)
+
+        # get the values to put into here
+        send_angle()
+        send_distance()
+        # --------------------------
 
     # good_contours = []
     # existing_contours = False
